@@ -13,15 +13,37 @@
             align-items: center;
             height: 100vh;
             background-color: #000;
+            position: relative;
         }
+
         #slideshow, #video-player {
             max-width: 100%;
             max-height: 100%;
             display: none; /* Başlangıçta gizle */
         }
+
+        /* Sağ üst köşe logo stili */
+        .logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5); /* Şeffaf arka plan */
+            border-radius: 5px;
+        }
+
+        .logo img {
+            height: 60px; /* Logo boyutunu ayarladık */
+        }
     </style>
 </head>
 <body>
+    <!-- Sağ üst köşe logo -->
+    <div class="logo">
+        <!-- Logoyu ekliyoruz, logo.png dosyasını static klasörüne koymalısın -->
+        <img src="static/logo.png" alt="Logo">
+    </div>
+
     <img id="slideshow" src="" alt="Slayt">
     <video id="video-player" controls muted>
         <source id="video-source" src="" type="video/mp4">
@@ -33,9 +55,8 @@
         const media = [
             { type: 'image', src: 'static/img1.jpg' },
             { type: 'image', src: 'static/img2.jpg' },
-            { type: 'image', src: 'static/img3.jpg' },
-            { type: 'video', src: 'static/video1.mp4' }
-            
+            { type: 'video', src: 'static/video1.mp4' },
+            { type: 'video', src: 'static/video2.mp4' }
         ];
 
         let index = 0;

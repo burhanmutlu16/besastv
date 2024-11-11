@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medya Slayt Gösterisi</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+        #slideshow, #video-player {
+            max-width: 100%;
+            max-height: 100%;
+            display: none; /* Başlangıçta gizle */
+        }
+    </style>
+</head>
+<body>
+    <img id="slideshow" src="" alt="Slayt">
+    <video id="video-player" controls muted>
+        <source id="video-source" src="" type="video/mp4">
+        Tarayıcınız video etiketini desteklemiyor.
+    </video>
+
+    <script>
+        // Medya dosyalarının listesi
+        const media = [
+            { type: 'image', src: 'static/img1.jpg' },
+            { type: 'image', src: 'static/img2.jpg' },
+            { type: 'image', src: 'static/img3.jpg' },
+            { type: 'video', src: 'static/video1.mp4' }
+            
+        ];
+
+        let index = 0;
+
+        function changeMedia() {
+            let currentMedia = media[index];
+
+            if (currentMedia.type === 'image') {
+                document.getElementById('video-player').style.display = 'none'; // Videoyu gizle
+                document.getElementById('slideshow').style.display = 'block'; // Resmi göster
+                document.getElementById('slideshow').src = currentMedia.src;
+
+                // Resim gösterim süresini ayarla (örneğin 5 saniye)
+                setTimeout(() => {
+                    index = (index + 1) % media.length; // Sıradaki medyaya geç
+                    changeMedia();
+                }, 5000);
+            } else if (currentMedia.type === 'video') {
+                document.getElementById('slideshow').style.display = 'none'; // Resmi gizle
+                document.getElementById('video-player').style.display = 'block'; // Videoyu göster
+                document.getElementById('video-source').src = currentMedia.src;
+                document.getElementById('video-player').load(); // Videoyu yeniden yükle
+                document.getElementById('video-player').play(); // Videoyu oynat
+
+                // Video bittiğinde sıradaki medyaya geç
+                document.getElementById('video-player').onended = () => {
+                    index = (index + 1) % media.length;
+                    changeMedia();
+                };
+            }
+        }
+
+        // İlk medyayı başlat
+        changeMedia();
+    </script>
+</body>
+</html>

@@ -31,7 +31,7 @@
             border-radius: 5px;
         }
         .logo img {
-            height: 100px;
+            height: 60px;
         }
     </style>
 </head>
@@ -47,8 +47,8 @@
     </video>
 
     <script>
-        // PHP dosyasından medya listesini al
-        fetch('media_list.php')
+        // JSON dosyasından medya listesini al
+        fetch('media_list.json')
             .then(response => response.json())
             .then(data => {
                 const media = data;
@@ -69,7 +69,7 @@
                     setTimeout(() => {
                         index = (index + 1) % media.length;
                         changeMedia();
-                    }, 5000);
+                    }, 10000); //Sonraki Medyaya Geçiş Süresi (ms)
                 } else if (currentMedia.type === 'video') {
                     document.getElementById('slideshow').style.display = 'none';
                     document.getElementById('video-player').style.display = 'block';

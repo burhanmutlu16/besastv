@@ -17,11 +17,19 @@
             background-color: #000;
             position: relative;
         }
+
+        /* Video ve resimlerin tam ekran kaplaması için ayarlar */
         #slideshow, #video-player {
-            max-width: 100%;
-            max-height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* İçeriği tüm alanı kaplayacak şekilde ölçekle */
             display: none;
         }
+
+        /* Logo ayarları */
         .logo {
             position: absolute;
             top: 10px;

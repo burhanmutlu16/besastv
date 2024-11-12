@@ -1,5 +1,5 @@
 <?php
-// static klasöründeki tüm medya dosyalarını listele
+// static klasöründeki tüm medya dosyalarını listeleyen PHP dosyası
 $mediaFolder = 'static';
 $mediaFiles = [];
 

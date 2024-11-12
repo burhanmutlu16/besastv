@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medya Slayt Gösterisi</title>
+    <!-- Tarayıcıyı saatde bir yenileme için -->
+	<meta http-equiv="refresh" content="3600"> 
+    <title>BesasTV</title>
     <style>
         body {
             margin: 0;
@@ -15,32 +17,26 @@
             background-color: #000;
             position: relative;
         }
-
         #slideshow, #video-player {
             max-width: 100%;
             max-height: 100%;
-            display: none; /* Başlangıçta gizle */
+            display: none;
         }
-
-        /* Sağ üst köşe logo stili */
         .logo {
             position: absolute;
             top: 10px;
             right: 10px;
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.5); /* Şeffaf arka plan */
+            background-color: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
         }
-
         .logo img {
-            height: 100px; /* Logo boyutunu ayarladık */
+            height: 100px;
         }
     </style>
 </head>
 <body>
-    <!-- Sağ üst köşe logo -->
     <div class="logo">
-        <!-- Logoyu ekliyoruz, logo.png dosyasını static klasörüne koymalısın -->
         <img src="static/logo.png" alt="Logo">
     </div>
 
@@ -51,46 +47,45 @@
     </video>
 
     <script>
-        // Medya dosyalarının listesi
-        const media = [
-            { type: 'image', src: 'static/img1.jpg' },
-            { type: 'image', src: 'static/img2.jpg' },
-            { type: 'video', src: 'static/video1.mp4' },
-            { type: 'video', src: 'static/video2.mp4' }
-        ];
+        // PHP dosyasından medya listesini al
+        fetch('media_list.php')
+            .then(response => response.json())
+            .then(data => {
+                const media = data;
+                startSlideshow(media); // Medya slaytını başlat
+            });
 
-        let index = 0;
+        function startSlideshow(media) {
+            let index = 0;
 
-        function changeMedia() {
-            let currentMedia = media[index];
+            function changeMedia() {
+                let currentMedia = media[index];
 
-            if (currentMedia.type === 'image') {
-                document.getElementById('video-player').style.display = 'none'; // Videoyu gizle
-                document.getElementById('slideshow').style.display = 'block'; // Resmi göster
-                document.getElementById('slideshow').src = currentMedia.src;
+                if (currentMedia.type === 'image') {
+                    document.getElementById('video-player').style.display = 'none';
+                    document.getElementById('slideshow').style.display = 'block';
+                    document.getElementById('slideshow').src = currentMedia.src;
 
-                // Resim gösterim süresini ayarla (örneğin 5 saniye)
-                setTimeout(() => {
-                    index = (index + 1) % media.length; // Sıradaki medyaya geç
-                    changeMedia();
-                }, 5000);
-            } else if (currentMedia.type === 'video') {
-                document.getElementById('slideshow').style.display = 'none'; // Resmi gizle
-                document.getElementById('video-player').style.display = 'block'; // Videoyu göster
-                document.getElementById('video-source').src = currentMedia.src;
-                document.getElementById('video-player').load(); // Videoyu yeniden yükle
-                document.getElementById('video-player').play(); // Videoyu oynat
+                    setTimeout(() => {
+                        index = (index + 1) % media.length;
+                        changeMedia();
+                    }, 5000);
+                } else if (currentMedia.type === 'video') {
+                    document.getElementById('slideshow').style.display = 'none';
+                    document.getElementById('video-player').style.display = 'block';
+                    document.getElementById('video-source').src = currentMedia.src;
+                    document.getElementById('video-player').load();
+                    document.getElementById('video-player').play();
 
-                // Video bittiğinde sıradaki medyaya geç
-                document.getElementById('video-player').onended = () => {
-                    index = (index + 1) % media.length;
-                    changeMedia();
-                };
+                    document.getElementById('video-player').onended = () => {
+                        index = (index + 1) % media.length;
+                        changeMedia();
+                    };
+                }
             }
-        }
 
-        // İlk medyayı başlat
-        changeMedia();
+            changeMedia();
+        }
     </script>
 </body>
 </html>

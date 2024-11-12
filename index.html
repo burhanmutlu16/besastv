@@ -47,13 +47,29 @@
     </video>
 
     <script>
-        // JSON dosyasından medya listesini al
+        // JSON dosyasından medya listesini al ve varlıklarını kontrol et
         fetch('media_list.json')
             .then(response => response.json())
-            .then(data => {
-                const media = data;
-                startSlideshow(media); // Medya slaytını başlat
-            });
+            .then(data => filterExistingMedia(data))
+            .then(filteredMedia => startSlideshow(filteredMedia));
+
+        // Varlığı kontrol ederek yalnızca mevcut dosyaları filtrele
+        async function filterExistingMedia(media) {
+            const filteredMedia = [];
+            for (const item of media) {
+                try {
+                    const response = await fetch(item.src, { method: 'HEAD' });
+                    if (response.ok) {
+                        filteredMedia.push(item); // Dosya mevcutsa listeye ekle
+                    } else {
+                        console.log(`Eksik dosya atlandı: ${item.src}`);
+                    }
+                } catch (error) {
+                    console.log(`Eksik dosya atlandı: ${item.src}`);
+                }
+            }
+            return filteredMedia;
+        }
 
         function startSlideshow(media) {
             let index = 0;
@@ -69,7 +85,7 @@
                     setTimeout(() => {
                         index = (index + 1) % media.length;
                         changeMedia();
-                    }, 10000); //Sonraki Medyaya Geçiş Süresi (ms)
+                    }, 5000);
                 } else if (currentMedia.type === 'video') {
                     document.getElementById('slideshow').style.display = 'none';
                     document.getElementById('video-player').style.display = 'block';

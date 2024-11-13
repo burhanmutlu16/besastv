@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,17 +29,19 @@
             display: none;
         }
 
-        /* Logo ayarları */
+        /* Logo sabitleme ve tasarımı */
         .logo {
             position: absolute;
             top: 10px;
             right: 10px;
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
+            /*background-color: rgba(0, 0, 0, 0.5);*/
             border-radius: 5px;
+            z-index: 10; /* Logoyu üst katmana al */
         }
+
         .logo img {
-            height: 100px;
+            height: 60px;
         }
     </style>
 </head>
@@ -79,6 +81,11 @@
             return filteredMedia;
         }
 
+        // Benzersiz bir URL ile dosya yüklemek için yardımcı fonksiyon
+        function getUniqueSrc(src) {
+            return `${src}?v=${new Date().getTime()}`;
+        }
+
         function startSlideshow(media) {
             let index = 0;
 
@@ -88,16 +95,16 @@
                 if (currentMedia.type === 'image') {
                     document.getElementById('video-player').style.display = 'none';
                     document.getElementById('slideshow').style.display = 'block';
-                    document.getElementById('slideshow').src = currentMedia.src;
+                    document.getElementById('slideshow').src = getUniqueSrc(currentMedia.src);
 
                     setTimeout(() => {
                         index = (index + 1) % media.length;
                         changeMedia();
-                    }, 5000);
+                    }, 10000);
                 } else if (currentMedia.type === 'video') {
                     document.getElementById('slideshow').style.display = 'none';
                     document.getElementById('video-player').style.display = 'block';
-                    document.getElementById('video-source').src = currentMedia.src;
+                    document.getElementById('video-source').src = getUniqueSrc(currentMedia.src);
                     document.getElementById('video-player').load();
                     document.getElementById('video-player').play();
 
@@ -110,6 +117,26 @@
 
             changeMedia();
         }
+    </script>
+    <script>
+        // Sağ tıklamayı devre dışı bırak
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    
+        // F12, Ctrl+Shift+I ve Ctrl+U gibi kısayolları devre dışı bırak
+        document.addEventListener('keydown', function(event) {
+            // F12
+            if (event.key === 'F12') {
+                event.preventDefault();
+            }
+            // Ctrl+Shift+I (Chrome ve bazı tarayıcılarda geliştirici araçlarını açar)
+            if (event.ctrlKey && event.shiftKey && event.key === 'I') {
+                event.preventDefault();
+            }
+            // Ctrl+U (Kaynak kodu görüntüle)
+            if (event.ctrlKey && event.key === 'u') {
+                event.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
